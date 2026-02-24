@@ -21,6 +21,7 @@ def open_virtual_mfdataset(
     load: bool = True,
     reference_dir: str | None = None,
     reference_format: Literal["json", "parquet"] = "json",
+    skip_variables: list[str] | None = None,
     **xr_combine_nested_kwargs: Any,
 ) -> xr.Dataset:
     """Open multiple granules as a single virtual xarray Dataset.
@@ -158,7 +159,7 @@ def open_virtual_mfdataset(
         vmfdataset = vz.open_virtual_mfdataset(
             urls=granule_dmrpp_urls,
             registry=obstore_registry,
-            parser=DMRPPParser(group=group),
+            parser=DMRPPParser(group=group, skip_variables=skip_variables),
             preprocess=preprocess,
             parallel=parallel,
             combine="nested",

@@ -33,3 +33,18 @@ def test_open_virtual_mfdataset(granules):
     vds = earthaccess.open_virtual_mfdataset(granules, concat_dim="time")
     # We can use fancy indexing
     assert vds.isel(time=0) is not None
+
+
+def test_open_virtual_mfdataset_with_skipped_variables():
+    granules = earthaccess.search_data(
+        count=1, temporal=("2025"), short_name="VNP43MA4"
+    )
+    vds = earthaccess.open_virtual_mfdataset(
+        granules,
+        group="/HDFEOS/GRIDS/VIIRS_Grid_BRDF/Data_Fields",
+        concat_dim="XDim",
+        skip_variables=["Projection"],
+    )
+
+    assert vds.isel(XDim=0) is not None
+    assert vds.variables.get("Projection") is None
